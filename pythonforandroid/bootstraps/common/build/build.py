@@ -16,6 +16,8 @@ import sys
 import tarfile
 import tempfile
 import time
+import glob
+import sh
 
 from distutils.version import LooseVersion
 from fnmatch import fnmatch
@@ -82,7 +84,7 @@ else:
 if PYTHON is not None and not exists(PYTHON):
     PYTHON = None
 
-if _bootstrap_name in ('sdl2', 'webview', 'service_only'):
+if _bootstrap_name in ('sdl2', 'webview', 'qt5', 'service_only'):
     WHITELIST_PATTERNS.append('pyconfig.h')
 
 environment = jinja2.Environment(loader=jinja2.FileSystemLoader(
@@ -223,6 +225,25 @@ def compile_py_file(python_file, optimize_python=True):
 
     return ".".join([os.path.splitext(python_file)[0], "pyc"])
 
+def make_qml_rcc(assets_dir):
+    # hardcoded for now, should be made automatic/configurable
+    components = ['qtdeclarative', 'qtquickcontrols2', 'qtmultimedia']
+    qt5_path = join('jni', 'qt5')
+    with open('android_rcc_bundle.qrc', 'w') as qrc_file:
+        qrc_file.write('<!DOCTYPE RCC><RCC version="1.0"><qresource>')
+        for qmlcomp in components:
+            qmlfiles = glob.glob(join(qt5_path, qmlcomp, 'qml', '**'), recursive=True)
+            qmlfiles.sort()
+            for qmlfile in qmlfiles:
+                if not qmlfile.endswith('.so') and not os.path.isdir(qmlfile):
+                    alias = qmlfile.replace(join(qt5_path, qmlcomp), '')[1:]
+                    print(alias + ':' + qmlfile)
+                    qrc_file.write(f'<file alias="{alias}">{qmlfile}</file>')
+        qrc_file.write('</qresource></RCC>')
+
+    rcc = sh.Command(join(qt5_path, 'qtbase', 'bin', 'rcc'))
+    rcc('--root', '/android_rcc_bundle/', '--binary', '-o',
+        join(assets_dir, 'android_rcc_bundle.rcc'), 'android_rcc_bundle.qrc')
 
 def make_package(args):
     # If no launcher is specified, require a main.py/main.pyc:
@@ -332,6 +353,10 @@ main.py that loads it.''')
 
     # Remove extra env vars tar-able directory:
     shutil.rmtree(env_vars_tarpath)
+
+    if get_bootstrap_name() == "qt5":
+        print("Generating QML resource file")
+        make_qml_rcc(assets_dir)
 
     # Prepare some variables for templating process
     res_dir = "src/main/res"
@@ -606,6 +631,13 @@ main.py that loads it.''')
         'strings.tmpl.xml',
         join(res_dir, 'values/strings.xml'),
         **render_args)
+
+    if get_bootstrap_name() == "qt5":
+        render(
+            'arrays.tmpl.xml',
+            join(res_dir, 'values', 'arrays.xml'),
+            arch=get_dist_info_for("archs")[0],
+            python_lib= "python%s" % get_python_version() )
 
     if exists(join("templates", "custom_rules.tmpl.xml")):
         render(
