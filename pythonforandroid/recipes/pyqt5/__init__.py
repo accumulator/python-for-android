@@ -64,7 +64,8 @@ class PyQt5Recipe(Recipe):
             info("compiling pyqt5")
 
             buildcmd = sh.Command('sip-install')
-            buildcmd = buildcmd.bake('--confirm-license', '--no-tools', '--qt-shared')
+            buildcmd = buildcmd.bake('--confirm-license', '--qt-shared', '--verbose')
+            buildcmd = buildcmd.bake('--no-tools', '--no-qml-plugin', '--no-designer-plugin', '--no-dbus-python')
 
             for include in "Qt QtCore QtNetwork QtGui QtQml QtQuick QtAndroidExtras".split(' '):
                 buildcmd = buildcmd.bake('--enable', include)
