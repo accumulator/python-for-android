@@ -160,5 +160,40 @@ public class PythonActivity extends QtActivity {
         }
     }
 
+    //----------------------------------------------------------------------------
+    // Listener interface for onNewIntent
+    //
+
+    public interface NewIntentListener {
+        void onNewIntent(Intent intent);
+    }
+
+    private List<NewIntentListener> newIntentListeners = null;
+
+    public void registerNewIntentListener(NewIntentListener listener) {
+        if ( this.newIntentListeners == null )
+            this.newIntentListeners = Collections.synchronizedList(new ArrayList<NewIntentListener>());
+        this.newIntentListeners.add(listener);
+    }
+
+    public void unregisterNewIntentListener(NewIntentListener listener) {
+        if ( this.newIntentListeners == null )
+            return;
+        this.newIntentListeners.remove(listener);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        if ( this.newIntentListeners == null )
+            return;
+        this.onResume();
+        synchronized ( this.newIntentListeners ) {
+            Iterator<NewIntentListener> iterator = this.newIntentListeners.iterator();
+            while ( iterator.hasNext() ) {
+                (iterator.next()).onNewIntent(intent);
+            }
+        }
+    }
+
 }
 
