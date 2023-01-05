@@ -20,6 +20,7 @@ class Qt5Recipe(BootstrapNDKRecipe):
 
     depends = ['python3']
     conflicts = ['sdl2', 'genericndkbuild']
+    patches = ["disable-x86_64-avx-avx2.patch"]
 
     need_stl_shared = True
 
