@@ -1,16 +1,10 @@
 
 #include <pthread.h>
+#include <stdlib.h>
 #include <jni.h>
-
-#define LOGI(...) do {} while (0)
-#define LOGE(...) do {} while (0)
 
 #include "android/log.h"
 
-/* These JNI management functions are taken from SDL2, but modified to refer to pyjnius */
-
-/* #define LOG(n, x) __android_log_write(ANDROID_LOG_INFO, (n), (x)) */
-/* #define LOGP(x) LOG("python", (x)) */
 #define LOG_TAG "Python_android"
 #define LOGI(...)  __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
 #define LOGE(...)  __android_log_print(ANDROID_LOG_ERROR,LOG_TAG,__VA_ARGS__)
@@ -50,6 +44,20 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved)
     Android_JNI_SetupThread();
 
     return JNI_VERSION_1_4;
+}
+
+JNIEXPORT void JNICALL Java_org_kivy_android_PythonActivity_nativeSetenv(
+                                    JNIEnv* env, jclass cls,
+                                    jstring name, jstring value)
+{
+    const char *utfname = (*env)->GetStringUTFChars(env, name, NULL);
+    const char *utfvalue = (*env)->GetStringUTFChars(env, value, NULL);
+
+    LOGI("JNI_nativeSetenv called, %s=%s", utfname, utfvalue);
+    setenv(utfname, utfvalue, 1);
+
+    (*env)->ReleaseStringUTFChars(env, name, utfname);
+    (*env)->ReleaseStringUTFChars(env, value, utfvalue);
 }
 
 JNIEnv* Android_JNI_GetEnv(void)

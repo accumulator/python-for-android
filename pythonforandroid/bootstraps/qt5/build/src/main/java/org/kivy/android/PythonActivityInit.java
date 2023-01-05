@@ -2,14 +2,9 @@ package org.kivy.android;
 
 import java.io.InputStream;
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.HashMap;
-import java.io.UnsupportedEncodingException;
 
 import android.app.Activity;
 import android.util.Log;
-import android.util.Base64;
 
 import android.content.Context;
 import android.content.pm.ActivityInfo;
@@ -22,9 +17,7 @@ import org.qtproject.qt5.android.QtActivityDelegate;
 import org.qtproject.qt5.android.multimedia.QtMultimediaUtils;
 
 /*
- * this class is added to android.app.static_init_classes metadata key
- * unfortunately it gets called before any loading of qt/other libs, so
- * we probably cannot do any library loading here
+ * this class is added to android.app.static_init_classes metadata key.
  */
 public class PythonActivityInit {
     private static final String TAG = "PythonActivityInit";
@@ -39,6 +32,8 @@ public class PythonActivityInit {
         Log.v(TAG, o.getClass().getName());
         mLoader = (QtActivityDelegate)o;
 
+        // QtMultimediaUtils doesn't get initialized with the activity instance (?)
+        // force it here.
         QtMultimediaUtils.setContext(mActivity);
     }
 
@@ -55,17 +50,10 @@ public class PythonActivityInit {
         PythonActivityUtil pythonActivityUtil = new PythonActivityUtil(mActivity, resourceManager);
         pythonActivityUtil.unpackData("private", new File(app_root_dir));
 
-
-
         Log.v(TAG, "Device: " + android.os.Build.DEVICE);
         Log.v(TAG, "Model: " + android.os.Build.MODEL);
 
         PythonActivity.initialize(); //Bundle extras = mActivity.getIntent().getExtras();
-
-        // This is a hack, until we get nativeSetenv working.
-        // this delegates setting the env vars to Qt, but this trick
-        // only works for debug builds..
-        HashMap<String,String> additionalEnv = new HashMap<>();
 
         if (mActivity.getIntent() != null && mActivity.getIntent().getAction() != null &&
                 mActivity.getIntent().getAction().equals("org.kivy.LAUNCH")) {
@@ -73,12 +61,9 @@ public class PythonActivityInit {
 
             Project p = Project.scanDirectory(path);
             String entry_point = mActivity.getEntryPoint(p.dir);
-//             PythonActivity.nativeSetenv("ANDROID_ENTRYPOINT", p.dir + "/" + entry_point);
-//             PythonActivity.nativeSetenv("ANDROID_ARGUMENT", p.dir);
-//             PythonActivity.nativeSetenv("ANDROID_APP_PATH", p.dir);
-            additionalEnv.put("ANDROID_ENTRYPOINT", p.dir + "/" + entry_point);
-            additionalEnv.put("ANDROID_ARGUMENT", p.dir);
-            additionalEnv.put("ANDROID_APP_PATH", p.dir);
+            PythonActivity.nativeSetenv("ANDROID_ENTRYPOINT", p.dir + "/" + entry_point);
+            PythonActivity.nativeSetenv("ANDROID_ARGUMENT", p.dir);
+            PythonActivity.nativeSetenv("ANDROID_APP_PATH", p.dir);
 
             if (p != null) {
                 if (p.landscape) {
@@ -87,53 +72,19 @@ public class PythonActivityInit {
                     mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
                 }
             }
-
-            // Let old apps know they started.
-//             try {
-//                 FileWriter f = new FileWriter(new File(path, ".launch"));
-//                 f.write("started");
-//                 f.close();
-//             } catch (IOException e) {
-//                 //pass
-//             }
         } else {
             String entry_point = mActivity.getEntryPoint(app_root_dir);
-//             PythonActivity.nativeSetenv("ANDROID_ENTRYPOINT", entry_point);
-//             PythonActivity.nativeSetenv("ANDROID_ARGUMENT", app_root_dir);
-//             PythonActivity.nativeSetenv("ANDROID_APP_PATH", app_root_dir);
-            additionalEnv.put("ANDROID_ENTRYPOINT", entry_point);
-            additionalEnv.put("ANDROID_ARGUMENT", app_root_dir);
-            additionalEnv.put("ANDROID_APP_PATH", app_root_dir);
+            PythonActivity.nativeSetenv("ANDROID_ENTRYPOINT", entry_point);
+            PythonActivity.nativeSetenv("ANDROID_ARGUMENT", app_root_dir);
+            PythonActivity.nativeSetenv("ANDROID_APP_PATH", app_root_dir);
         }
 
         String mFilesDirectory = mActivity.getFilesDir().getAbsolutePath();
         Log.v(TAG, "Setting env vars for start.c and Python to use");
-//         PythonActivity.nativeSetenv("ANDROID_PRIVATE", mFilesDirectory);
-//         PythonActivity.nativeSetenv("ANDROID_UNPACK", app_root_dir);
-//         PythonActivity.nativeSetenv("PYTHONHOME", app_root_dir);
-//         PythonActivity.nativeSetenv("PYTHONPATH", app_root_dir + ":" + app_root_dir + "/lib");
-//         PythonActivity.nativeSetenv("PYTHONOPTIMIZE", "2");
-
-        additionalEnv.put("ANDROID_PRIVATE", mFilesDirectory);
-        additionalEnv.put("ANDROID_UNPACK", app_root_dir);
-        additionalEnv.put("PYTHONHOME", app_root_dir);
-        additionalEnv.put("PYTHONPATH", app_root_dir + ":" + app_root_dir + "/lib");
-        additionalEnv.put("PYTHONOPTIMIZE", "2");
-
-        String combinedEnv = new String();
-        for (String key: additionalEnv.keySet()) {
-            combinedEnv += "\t" + key + "=" + additionalEnv.get(key);
-        }
-        try {
-            byte[] env = combinedEnv.substring(1).getBytes("UTF-8");
-            byte[] encodedEnv = Base64.encode(env, Base64.DEFAULT);
-
-            mActivity.getIntent().putExtra("extraenvvars", new String(encodedEnv));
-
-            Log.v(TAG, "Final Qt env: " + new String(encodedEnv));
-        } catch (UnsupportedEncodingException e) {
-            Log.v(TAG, "hmm");
-        }
-
+        PythonActivity.nativeSetenv("ANDROID_PRIVATE", mFilesDirectory);
+        PythonActivity.nativeSetenv("ANDROID_UNPACK", app_root_dir);
+        PythonActivity.nativeSetenv("PYTHONHOME", app_root_dir);
+        PythonActivity.nativeSetenv("PYTHONPATH", app_root_dir + ":" + app_root_dir + "/lib");
+        PythonActivity.nativeSetenv("PYTHONOPTIMIZE", "2");
     }
 }

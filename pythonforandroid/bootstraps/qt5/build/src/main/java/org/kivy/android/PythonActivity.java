@@ -53,12 +53,15 @@ public class PythonActivity extends QtActivity {
     public static boolean mBrokenLibraries;
     protected static ViewGroup mLayout;
 
-    // TODO: not functional currently
     public static native void nativeSetenv(String name, String value);
 
+    static {
+        // load bootstrap JNI/Python early.
+        System.loadLibrary("main");
+    }
+
     public String getAppRoot() {
-        String app_root =  getFilesDir().getAbsolutePath() + "/app";
-        return app_root;
+        return getFilesDir().getAbsolutePath() + "/app";
     }
 
     public String getEntryPoint(String search_dir) {
@@ -80,7 +83,6 @@ public class PythonActivity extends QtActivity {
     public static void initialize() {
         // The static nature of the singleton and Android quirkyness force us to initialize everything here
         // Otherwise, when exiting the app and returning to it, these variables *keep* their pre exit values
-//         mWebView = null;
         mLayout = null;
         mBrokenLibraries = false;
     }
@@ -88,76 +90,13 @@ public class PythonActivity extends QtActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Log.v(TAG, "My oncreate running");
+        Log.v(TAG, "My onCreate running");
         resourceManager = new ResourceManager(this);
 
         this.mActivity = this;
 //         this.showLoadingScreen();
-        //new UnpackFilesTask().execute(getAppRoot());
 
         super.onCreate(savedInstanceState);
-    }
-
-    private class UnpackFilesTask extends AsyncTask<String, Void, String> {
-        @Override
-        protected String doInBackground(String... params) {
-            File app_root_file = new File(params[0]);
-            Log.v(TAG, "Ready to unpack");
-            PythonActivityUtil pythonActivityUtil = new PythonActivityUtil(mActivity, resourceManager);
-            pythonActivityUtil.unpackData("private", app_root_file);
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            Log.v("Python", "Device: " + android.os.Build.DEVICE);
-            Log.v("Python", "Model: " + android.os.Build.MODEL);
-
-            PythonActivity.initialize();
-
-            String app_root_dir = getAppRoot();
-            if (getIntent() != null && getIntent().getAction() != null &&
-                    getIntent().getAction().equals("org.kivy.LAUNCH")) {
-                File path = new File(getIntent().getData().getSchemeSpecificPart());
-
-                Project p = Project.scanDirectory(path);
-                String entry_point = getEntryPoint(p.dir);
-                PythonActivity.nativeSetenv("ANDROID_ENTRYPOINT", p.dir + "/" + entry_point);
-                PythonActivity.nativeSetenv("ANDROID_ARGUMENT", p.dir);
-                PythonActivity.nativeSetenv("ANDROID_APP_PATH", p.dir);
-
-                if (p != null) {
-                    if (p.landscape) {
-                        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-                    } else {
-                        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-                    }
-                }
-
-                // Let old apps know they started.
-                try {
-                    FileWriter f = new FileWriter(new File(path, ".launch"));
-                    f.write("started");
-                    f.close();
-                } catch (IOException e) {
-                    // pass
-                }
-            } else {
-                String entry_point = getEntryPoint(app_root_dir);
-                PythonActivity.nativeSetenv("ANDROID_ENTRYPOINT", entry_point);
-                PythonActivity.nativeSetenv("ANDROID_ARGUMENT", app_root_dir);
-                PythonActivity.nativeSetenv("ANDROID_APP_PATH", app_root_dir);
-            }
-
-            String mFilesDirectory = mActivity.getFilesDir().getAbsolutePath();
-            Log.v(TAG, "Setting env vars for start.c and Python to use");
-            PythonActivity.nativeSetenv("ANDROID_PRIVATE", mFilesDirectory);
-            PythonActivity.nativeSetenv("ANDROID_UNPACK", app_root_dir);
-            PythonActivity.nativeSetenv("PYTHONHOME", app_root_dir);
-            PythonActivity.nativeSetenv("PYTHONPATH", app_root_dir + ":" + app_root_dir + "/lib");
-            PythonActivity.nativeSetenv("PYTHONOPTIMIZE", "2");
-
-        }
     }
 
     //----------------------------------------------------------------------------
@@ -196,4 +135,3 @@ public class PythonActivity extends QtActivity {
     }
 
 }
-
