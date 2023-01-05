@@ -81,6 +81,8 @@ public class PythonActivityUtil {
             diskVersion = "";
         }
 
+        Log.v(TAG, "Disk version is " + diskVersion);
+
         // If the disk data is out of date, extract it and write the version file.
         if (! dataVersion.equals(diskVersion)) {
             Log.v(TAG, "Extracting " + resource + " assets.");
