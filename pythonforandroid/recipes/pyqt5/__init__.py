@@ -72,4 +72,11 @@ class PyQt5Recipe(Recipe):
 
             shprint(buildcmd, _env=env, _tail=50, _critical=True)
 
+            with open(join(build_dir,'compile_finished'), 'w') as fp:
+                fp.write('')
+
+    def should_build(self, arch):
+        build_dir = self.get_build_dir(arch.arch)
+        return not Path(join(build_dir,'compile_finished')).is_file()
+
 recipe = PyQt5Recipe()
