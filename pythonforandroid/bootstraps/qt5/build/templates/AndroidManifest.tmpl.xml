@@ -73,6 +73,7 @@
 
         <activity android:name="{{args.android_entrypoint}}"
                   android:label="@string/app_name"
+                  android:theme="@style/AppTheme"
                   android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|fontScale|uiMode{% if args.min_sdk_version >= 8 %}|uiMode{% endif %}{% if args.min_sdk_version >= 13 %}|screenSize|smallestScreenSize{% endif %}{% if args.min_sdk_version >= 17 %}|layoutDirection{% endif %}{% if args.min_sdk_version >= 24 %}|density{% endif %}"
                   android:screenOrientation="{{ args.orientation }}"
                   {% if args.activity_launch_mode %}
@@ -118,7 +119,8 @@
             <meta-data android:name="android.app.background_running" android:value="false"/>
             <meta-data android:name="android.app.auto_screen_scale_factor" android:value="false"/>
             <meta-data android:name="android.app.extract_android_style" android:value="default"/>
-
+            <!-- Splash screen -->
+            <meta-data android:name="android.app.splash_screen_drawable" android:resource="@drawable/splash"/>
         </activity>
 
         {% if args.launcher %}
