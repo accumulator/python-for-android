@@ -34,6 +34,7 @@ import android.graphics.Color;
 
 import android.widget.AbsoluteLayout;
 import android.view.ViewGroup.LayoutParams;
+import android.view.WindowManager;
 
 import android.net.Uri;
 
@@ -89,9 +90,12 @@ public class PythonActivity extends QtActivity {
         resourceManager = new ResourceManager(this);
 
         this.mActivity = this;
-//         this.showLoadingScreen();
 
         super.onCreate(savedInstanceState);
+
+        // set secure policy
+        // TODO: configurable from spec
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
     }
 
     //----------------------------------------------------------------------------
