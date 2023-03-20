@@ -17,6 +17,8 @@ class PyQt5Recipe(Recipe):
 
     depends = ['qt5', 'pyjnius', 'setuptools', 'pyqt5sip', 'hostpython3', 'pyqt_builder']
 
+    BINDINGS = ['Qt', 'QtCore', 'QtNetwork', 'QtGui', 'QtQml', 'QtQuick', 'QtAndroidExtras']
+
     def get_recipe_env(self, arch):
         env = super().get_recipe_env(arch)
         recipe = self.get_recipe('qt5', self.ctx)
@@ -40,7 +42,7 @@ class PyQt5Recipe(Recipe):
         }
 
         project_dict['tool']['sip']['bindings'] = {}
-        for binding in 'Qt QtCore QtNetwork QtGui QtQml QtQuick QtAndroidExtras'.split(' '):
+        for binding in self.BINDINGS:
             project_dict['tool']['sip']['bindings'][binding] = {
                 'extra-link-args': [
                     '-L{}'.format(self.ctx.python_recipe.link_root(arch.arch)),
@@ -78,7 +80,7 @@ class PyQt5Recipe(Recipe):
             buildcmd = buildcmd.bake('--confirm-license', '--qt-shared', '--verbose')
             buildcmd = buildcmd.bake('--no-tools', '--no-qml-plugin', '--no-designer-plugin', '--no-dbus-python')
 
-            for include in "Qt QtCore QtNetwork QtGui QtQml QtQuick QtAndroidExtras".split(' '):
+            for include in self.BINDINGS:
                 buildcmd = buildcmd.bake('--enable', include)
 
             shprint(buildcmd, _env=env, _tail=50, _critical=True)
