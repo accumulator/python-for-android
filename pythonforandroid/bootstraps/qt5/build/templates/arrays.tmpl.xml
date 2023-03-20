@@ -11,6 +11,7 @@
         <item>{{ arch }};libplugins_imageformats_qwebp_{{ arch }}.so</item>
         <item>{{ arch }};libplugins_imageformats_qicns_{{ arch }}.so</item>
         <item>{{ arch }};libplugins_imageformats_qwbmp_{{ arch }}.so</item>
+        <item>{{ arch }};libplugins_imageformats_qsvg_{{ arch }}.so</item>
 
         <item>{{ arch }};libplugins_playlistformats_qtmultimedia_m3u_{{ arch }}.so</item>
         <item>{{ arch }};libplugins_video_videonode_qtsgvideonode_android_{{ arch }}.so</item>
@@ -53,6 +54,8 @@
         <item>{{ arch }};Qt5RemoteObjects_{{ arch }}</item>
         <item>{{ arch }};Qt5Multimedia_{{ arch }}</item>
         <item>{{ arch }};Qt5MultimediaQuick_{{ arch }}</item>
+        <item>{{ arch }};Qt5Svg_{{ arch }}</item>
+        <item>{{ arch }};Qt5VirtualKeyboard_{{ arch }}</item>
     </string-array>
     <string-array name="qt_sources">
         <item>https://download.qt.io/ministro/android/qt5/qt-5.7</item>
