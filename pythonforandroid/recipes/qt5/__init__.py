@@ -46,6 +46,8 @@ class Qt5Recipe(BootstrapNDKRecipe):
             f'libQt5RemoteObjects_{arch_name}.so': 'qtremoteobjects/lib',
             f'libQt5Multimedia_{arch_name}.so': 'qtmultimedia/lib',
             f'libQt5MultimediaQuick_{arch_name}.so': 'qtmultimedia/lib',
+            f'libQt5Svg_{arch_name}.so': 'qtsvg/lib',
+            f'libQt5VirtualKeyboard_{arch_name}.so': 'qtvirtualkeyboard/lib',
 
             f'libplugins_bearer_qandroidbearer_{arch_name}.so': 'qtbase/plugins/bearer',
             f'libplugins_platforms_qtforandroid_{arch_name}.so': 'qtbase/plugins/platforms',
@@ -57,11 +59,21 @@ class Qt5Recipe(BootstrapNDKRecipe):
             f'libplugins_imageformats_qwebp_{arch_name}.so': 'qtimageformats/plugins/imageformats',
             f'libplugins_imageformats_qicns_{arch_name}.so': 'qtimageformats/plugins/imageformats',
             f'libplugins_imageformats_qwbmp_{arch_name}.so': 'qtimageformats/plugins/imageformats',
+            f'libplugins_imageformats_qsvg_{arch_name}.so': 'qtsvg/plugins/imageformats',
+
+            f'libplugins_iconengines_qsvgicon_{arch_name}.so': 'qtsvg/plugins/iconengines',
 
             f'libplugins_playlistformats_qtmultimedia_m3u_{arch_name}.so': 'qtmultimedia/plugins/playlistformats',
             f'libplugins_video_videonode_qtsgvideonode_android_{arch_name}.so': 'qtmultimedia/plugins/video/videonode',
             f'libplugins_mediaservice_qtmedia_android_{arch_name}.so': 'qtmultimedia/plugins/mediaservice',
             f'libplugins_audio_qtaudio_opensles_{arch_name}.so': 'qtmultimedia/plugins/audio',
+
+            f'libplugins_platforminputcontexts_qtvirtualkeyboardplugin_{arch_name}.so': 'qtvirtualkeyboard/plugins/platforminputcontexts',
+            f'libplugins_virtualkeyboard_qtvirtualkeyboard_hangul_{arch_name}.so': 'qtvirtualkeyboard/plugins/virtualkeyboard',
+            f'libplugins_virtualkeyboard_qtvirtualkeyboard_openwnn_{arch_name}.so': 'qtvirtualkeyboard/plugins/virtualkeyboard',
+            f'libplugins_virtualkeyboard_qtvirtualkeyboard_pinyin_{arch_name}.so': 'qtvirtualkeyboard/plugins/virtualkeyboard',
+            f'libplugins_virtualkeyboard_qtvirtualkeyboard_tcime_{arch_name}.so': 'qtvirtualkeyboard/plugins/virtualkeyboard',
+            f'libplugins_virtualkeyboard_qtvirtualkeyboard_thai_{arch_name}.so': 'qtvirtualkeyboard/plugins/virtualkeyboard',
 
             f'libplugins_qmltooling_qmldbg_preview_{arch_name}.so': 'qtdeclarative/plugins/qmltooling',
             f'libplugins_qmltooling_qmldbg_native_{arch_name}.so': 'qtdeclarative/plugins/qmltooling',
@@ -91,6 +103,11 @@ class Qt5Recipe(BootstrapNDKRecipe):
             f'libqml_QtGraphicalEffects_qtgraphicaleffectsplugin_{arch_name}.so': 'qtgraphicaleffects/qml/QtGraphicalEffects',
             f'libqml_QtGraphicalEffects_private_qtgraphicaleffectsprivate_{arch_name}.so': 'qtgraphicaleffects/qml/QtGraphicalEffects/private',
             f'libqml_QtMultimedia_declarative_multimedia_{arch_name}.so': 'qtmultimedia/qml/QtMultimedia',
+
+            f'libqml_Qt_labs_folderlistmodel_qmlfolderlistmodelplugin_{arch_name}.so': 'qtdeclarative/qml/Qt/labs/folderlistmodel',
+            f'libqml_QtQuick_VirtualKeyboard_qtquickvirtualkeyboardplugin_{arch_name}.so': 'qtvirtualkeyboard/qml/QtQuick/VirtualKeyboard',
+            f'libqml_QtQuick_VirtualKeyboard_Settings_qtquickvirtualkeyboardsettingsplugin_{arch_name}.so': 'qtvirtualkeyboard/qml/QtQuick/VirtualKeyboard/Settings',
+            f'libqml_QtQuick_VirtualKeyboard_Styles_qtquickvirtualkeyboardstylesplugin_{arch_name}.so': 'qtvirtualkeyboard/qml/QtQuick/VirtualKeyboard/Styles',
         }
         return super().get_libraries(arch_name, in_context)
 

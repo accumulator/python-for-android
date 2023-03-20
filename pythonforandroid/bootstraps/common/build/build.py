@@ -248,7 +248,7 @@ def make_qml_rcc(assets_dir):
         return True
 
     # hardcoded for now, should be made automatic/configurable
-    components = ['qtdeclarative', 'qtquickcontrols2', 'qtmultimedia']
+    components = ['qtdeclarative', 'qtquickcontrols2', 'qtmultimedia', 'qtvirtualkeyboard']
     qt5_path = join('jni', 'qt5')
     with open('android_rcc_bundle.qrc', 'w') as qrc_file:
         qrc_file.write('<!DOCTYPE RCC><RCC version="1.0"><qresource>')
