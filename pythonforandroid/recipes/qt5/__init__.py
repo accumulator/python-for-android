@@ -11,8 +11,8 @@ import glob
 class Qt5Recipe(BootstrapNDKRecipe):
     name = 'qt5'
     url = 'git+https://code.qt.io/qt/qt5.git'
-    #version = '5.15.2'
-    version = '9b43a43ee96198674060c6b9591e515e2d27c28f'
+    #version = 'v5.15.7-lts-lgpl'
+    version = '95254e52c658729e80f741324045034c15ce9cb0'
 
     dir_name = 'qt5'
 
@@ -98,7 +98,7 @@ class Qt5Recipe(BootstrapNDKRecipe):
             f'libqml_QtQuick_LocalStorage_qmllocalstorageplugin_{arch_name}.so': 'qtdeclarative/qml/QtQuick/LocalStorage',
             f'libqml_QtQuick_Templates.2_qtquicktemplates2plugin_{arch_name}.so': 'qtquickcontrols2/qml/QtQuick/Templates.2',
             f'libqml_QtQuick_Controls.2_qtquickcontrols2plugin_{arch_name}.so': 'qtquickcontrols2/qml/QtQuick/Controls.2',
-            f'libqml_QtQuick_Controls.2_Material_qtquickcontrols2materialstyleplugin_{arch_name}.so': 'qtquickcontrols2/qml/QtQuick/Controls.2/Material',
+            f'libqml_QtQuick_Controls.2_Material_qqc2materialstyleplugin_{arch_name}.so': 'qtquickcontrols2/qml/QtQuick/Controls.2/Material',
             f'libqml_QtRemoteObjects_qtremoteobjects_{arch_name}.so': 'qtremoteobjects/qml/QtRemoteObjects',
             f'libqml_QtGraphicalEffects_qtgraphicaleffectsplugin_{arch_name}.so': 'qtgraphicaleffects/qml/QtGraphicalEffects',
             f'libqml_QtGraphicalEffects_private_qtgraphicaleffectsprivate_{arch_name}.so': 'qtgraphicaleffects/qml/QtGraphicalEffects/private',
