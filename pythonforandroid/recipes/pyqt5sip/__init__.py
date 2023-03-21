@@ -7,7 +7,7 @@ from pythonforandroid.recipe import CythonRecipe, Recipe, PythonRecipe
 from pythonforandroid.toolchain import current_directory
 
 class PyQt5SipRecipe(PythonRecipe):
-    version = '12.9.0'
+    version = '12.11.1'
     url = "https://pypi.python.org/packages/source/P/PyQt5_sip/PyQt5_sip-{version}.tar.gz"
     name = 'pyqt5sip'
 

@@ -11,7 +11,7 @@ from pythonforandroid.recipe import Recipe
 from pythonforandroid.toolchain import current_directory
 
 class PyQt5Recipe(Recipe):
-    version = '5.15.6'
+    version = '5.15.9'
     url = "https://pypi.python.org/packages/source/P/PyQt5/PyQt5-{version}.tar.gz"
     name = 'pyqt5'
 
