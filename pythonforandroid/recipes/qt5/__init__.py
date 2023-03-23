@@ -20,7 +20,6 @@ class Qt5Recipe(BootstrapNDKRecipe):
 
     depends = ['python3']
     conflicts = ['sdl2', 'genericndkbuild']
-    patches = ["disable-x86_64-avx-avx2.patch"]
 
     need_stl_shared = True
 
@@ -48,6 +47,7 @@ class Qt5Recipe(BootstrapNDKRecipe):
             f'libQt5MultimediaQuick_{arch_name}.so': 'qtmultimedia/lib',
             f'libQt5Svg_{arch_name}.so': 'qtsvg/lib',
             f'libQt5VirtualKeyboard_{arch_name}.so': 'qtvirtualkeyboard/lib',
+            f'libQt5AndroidExtras_{arch_name}.so': 'qtandroidextras/lib',
 
             f'libplugins_bearer_qandroidbearer_{arch_name}.so': 'qtbase/plugins/bearer',
             f'libplugins_platforms_qtforandroid_{arch_name}.so': 'qtbase/plugins/platforms',
