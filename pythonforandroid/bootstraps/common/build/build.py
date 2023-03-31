@@ -890,7 +890,7 @@ tools directory of the Android SDK.
                           'See https://developer.android.com/guide/topics/data/'
                           'autobackup#IncludingFiles for more information'))
     ap.add_argument('--no-optimize-python', dest='optimize_python',
-                    action='store_false', default=True,
+                    action='store_false', default=False,
                     help=('Whether to compile to optimised .pyo files, using -OO '
                           '(strips docstrings and asserts)'))
     ap.add_argument('--extra-manifest-xml', default='',
