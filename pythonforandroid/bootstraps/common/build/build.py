@@ -233,7 +233,7 @@ def make_qml_rcc(assets_dir):
         if basename in ('Makefile', ):
             return False
         ext = os.path.splitext(basename)[1]
-        if ext in ('.so', '.h', '.cpp'):
+        if ext in ('.so', '.h', '.cpp', '.bat', '.pro', '.pri', '.qrc', '.txt'):
             return False
         return True
 
