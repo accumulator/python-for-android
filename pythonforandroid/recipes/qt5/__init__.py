@@ -20,6 +20,7 @@ class Qt5Recipe(BootstrapNDKRecipe):
 
     depends = ['python3']
     conflicts = ['sdl2', 'genericndkbuild']
+    patches = ['add-way-to-disable-accessibility-env-var.patch']
 
     need_stl_shared = True
 
