@@ -60,11 +60,6 @@ public class PythonActivity extends QtActivity {
 
     public static native void nativeSetenv(String name, String value);
 
-    static {
-        // load bootstrap JNI/Python early.
-        System.loadLibrary("main");
-    }
-
     public String getAppRoot() {
         return getFilesDir().getAbsolutePath() + "/app";
     }
@@ -87,6 +82,18 @@ public class PythonActivity extends QtActivity {
         mBrokenLibraries = false;
     }
 
+    private void loadNativeLib() {
+        Log.v(TAG, "loading native lib");
+        try {
+            System.loadLibrary("main");
+        } catch (java.lang.UnsatisfiedLinkError e) {
+            // alternate library load, some Android 5 devices fail
+            // the above loadLibrary call.
+            Log.v(TAG, "loading native lib (alt)");
+            String libPath = this.getFilesDir().getParentFile().getAbsolutePath() + "/lib";
+            System.load(libPath + "/libmain.so");
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -94,6 +101,8 @@ public class PythonActivity extends QtActivity {
         resourceManager = new ResourceManager(this);
 
         this.mActivity = this;
+
+        loadNativeLib();
 
         super.onCreate(savedInstanceState);
     }
