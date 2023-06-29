@@ -8,7 +8,7 @@ class Qt5Bootstrap(Bootstrap):
     name = 'qt5'
 
     recipe_depends = list(
-        set(Bootstrap.recipe_depends).union({'qt5'})
+        set(Bootstrap.recipe_depends).union({'qt6'})
     )
 
     def distribute_aidl(self, aidl_dir, dest_dir="src"):

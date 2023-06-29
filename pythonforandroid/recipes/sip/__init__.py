@@ -2,7 +2,7 @@ from pythonforandroid.recipe import CompiledComponentsPythonRecipe
 
 
 class SipRecipe(CompiledComponentsPythonRecipe):
-    version = '6.7.7'
+    version = '6.7.9'
     url = "https://pypi.python.org/packages/source/s/sip/sip-{version}.tar.gz"
     name = 'sip'
 

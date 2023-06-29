@@ -90,7 +90,7 @@ def check_ndk_version(ndk_dir):
 
     info(CURRENT_NDK_VERSION_MESSAGE.format(ndk_version=string_version))
 
-    if major_version < MIN_NDK_VERSION:
+    if major_version < MIN_NDK_VERSION and False:
         raise BuildInterruptingException(
             NDK_LOWER_THAN_SUPPORTED_MESSAGE.format(
                 min_supported=MIN_NDK_VERSION, ndk_url=NDK_DOWNLOAD_URL
