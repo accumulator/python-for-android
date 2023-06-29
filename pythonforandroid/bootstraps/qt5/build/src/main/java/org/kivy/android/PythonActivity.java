@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.Runnable;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 
 import android.view.ViewGroup;
 import android.view.KeyEvent;
+import android.view.Window;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -34,8 +36,11 @@ import android.graphics.Color;
 
 import android.widget.AbsoluteLayout;
 import android.view.ViewGroup.LayoutParams;
+import android.view.WindowManager;
 
 import android.net.Uri;
+
+import android.support.v4.view.ViewCompat;
 
 import org.renpy.android.ResourceManager;
 
@@ -89,9 +94,42 @@ public class PythonActivity extends QtActivity {
         resourceManager = new ResourceManager(this);
 
         this.mActivity = this;
-//         this.showLoadingScreen();
 
         super.onCreate(savedInstanceState);
+    }
+
+    public void setSecureWindow(boolean secure) {
+        runOnUiThread(new Runnable() {
+            private Activity mActivity;
+            private boolean mEnable;
+
+            public Runnable _initialize(Activity activity, boolean enable) {
+                this.mActivity = activity;
+                this.mEnable = enable;
+                return this;
+            }
+
+            @Override
+            public void run() {
+                Window window = this.mActivity.getWindow();
+
+                if ( !((window.getAttributes().flags & WindowManager.LayoutParams.FLAG_SECURE) != 0) ^ mEnable)
+                    return; // no change needed
+
+                if (mEnable) {
+                    Log.v(TAG, "Setting Secure Window");
+                    window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
+                } else {
+                    Log.v(TAG, "UnSetting Secure Window");
+                    window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
+                    if (ViewCompat.isAttachedToWindow(window.getDecorView())) {
+                        WindowManager wm = this.mActivity.getWindowManager();
+                        wm.removeViewImmediate(window.getDecorView());
+                        wm.addView(window.getDecorView(), window.getAttributes());
+                    }
+                }
+            }
+        }._initialize(this, secure));
     }
 
     //----------------------------------------------------------------------------
