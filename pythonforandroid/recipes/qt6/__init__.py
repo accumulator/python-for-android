@@ -16,7 +16,7 @@ class Qt6Recipe(BootstrapNDKRecipe):
 
     built_libraries = {'dummy':'.'}
 
-    depends = ['python3']
+    depends = ['python3', 'hostqt6']
     conflicts = ['sdl2', 'genericndkbuild']
     # patches = ['add-way-to-disable-accessibility-env-var.patch']
 
@@ -45,7 +45,6 @@ class Qt6Recipe(BootstrapNDKRecipe):
             f'libQt5Multimedia_{arch_name}.so': 'qtmultimedia/lib',
             f'libQt5MultimediaQuick_{arch_name}.so': 'qtmultimedia/lib',
             f'libQt5Svg_{arch_name}.so': 'qtsvg/lib',
-            f'libQt5VirtualKeyboard_{arch_name}.so': 'qtvirtualkeyboard/lib',
             f'libQt5AndroidExtras_{arch_name}.so': 'qtandroidextras/lib',
 
             f'libplugins_bearer_qandroidbearer_{arch_name}.so': 'qtbase/plugins/bearer',
@@ -66,13 +65,6 @@ class Qt6Recipe(BootstrapNDKRecipe):
             f'libplugins_video_videonode_qtsgvideonode_android_{arch_name}.so': 'qtmultimedia/plugins/video/videonode',
             f'libplugins_mediaservice_qtmedia_android_{arch_name}.so': 'qtmultimedia/plugins/mediaservice',
             f'libplugins_audio_qtaudio_opensles_{arch_name}.so': 'qtmultimedia/plugins/audio',
-
-            f'libplugins_platforminputcontexts_qtvirtualkeyboardplugin_{arch_name}.so': 'qtvirtualkeyboard/plugins/platforminputcontexts',
-            f'libplugins_virtualkeyboard_qtvirtualkeyboard_hangul_{arch_name}.so': 'qtvirtualkeyboard/plugins/virtualkeyboard',
-            f'libplugins_virtualkeyboard_qtvirtualkeyboard_openwnn_{arch_name}.so': 'qtvirtualkeyboard/plugins/virtualkeyboard',
-            f'libplugins_virtualkeyboard_qtvirtualkeyboard_pinyin_{arch_name}.so': 'qtvirtualkeyboard/plugins/virtualkeyboard',
-            f'libplugins_virtualkeyboard_qtvirtualkeyboard_tcime_{arch_name}.so': 'qtvirtualkeyboard/plugins/virtualkeyboard',
-            f'libplugins_virtualkeyboard_qtvirtualkeyboard_thai_{arch_name}.so': 'qtvirtualkeyboard/plugins/virtualkeyboard',
 
             f'libplugins_qmltooling_qmldbg_preview_{arch_name}.so': 'qtdeclarative/plugins/qmltooling',
             f'libplugins_qmltooling_qmldbg_native_{arch_name}.so': 'qtdeclarative/plugins/qmltooling',
@@ -102,11 +94,6 @@ class Qt6Recipe(BootstrapNDKRecipe):
             f'libqml_QtGraphicalEffects_qtgraphicaleffectsplugin_{arch_name}.so': 'qtgraphicaleffects/qml/QtGraphicalEffects',
             f'libqml_QtGraphicalEffects_private_qtgraphicaleffectsprivate_{arch_name}.so': 'qtgraphicaleffects/qml/QtGraphicalEffects/private',
             f'libqml_QtMultimedia_declarative_multimedia_{arch_name}.so': 'qtmultimedia/qml/QtMultimedia',
-
-            f'libqml_Qt_labs_folderlistmodel_qmlfolderlistmodelplugin_{arch_name}.so': 'qtdeclarative/qml/Qt/labs/folderlistmodel',
-            f'libqml_QtQuick_VirtualKeyboard_qtquickvirtualkeyboardplugin_{arch_name}.so': 'qtvirtualkeyboard/qml/QtQuick/VirtualKeyboard',
-            f'libqml_QtQuick_VirtualKeyboard_Settings_qtquickvirtualkeyboardsettingsplugin_{arch_name}.so': 'qtvirtualkeyboard/qml/QtQuick/VirtualKeyboard/Settings',
-            f'libqml_QtQuick_VirtualKeyboard_Styles_qtquickvirtualkeyboardstylesplugin_{arch_name}.so': 'qtvirtualkeyboard/qml/QtQuick/VirtualKeyboard/Styles',
         }
         return super().get_libraries(arch_name, in_context)
 
@@ -116,8 +103,6 @@ class Qt6Recipe(BootstrapNDKRecipe):
             with_python=with_python,
         )
         env['APP_ALLOW_MISSING_DEPS'] = 'true'
-        # env['TARGET_QMAKEPATH'] = join(self.ctx.libs_dir, 'bin')
-
         return env
 
     def build_arch(self, arch):
@@ -126,7 +111,6 @@ class Qt6Recipe(BootstrapNDKRecipe):
         env = self.get_recipe_env(arch)
         with current_directory(self.get_jni_dir()):
             shprint(sh.Command(join(self.ctx.ndk_dir, "ndk-build")),
-                    #"APP_ALLOW_MISSING_DEPS=true",
                     "V=1", _env=env, _critical=True)
 
         build_dir = self.get_build_dir(arch.arch)
@@ -155,14 +139,14 @@ class Qt6Recipe(BootstrapNDKRecipe):
             configure = configure.bake('-nomake', 'tests')
             configure = configure.bake('-nomake', 'examples')
             configure = configure.bake('-no-widgets')
+            configure = configure.bake('-submodules',','.join(
+                ['qtbase', 'qtdeclarative', 'qtimageformats', 'qtmultimedia']))
             configure = configure.bake('-skip', ','.join(
-                ['qtwebview','qtwebengine','qtquick3d',
-                 'qtquick3dphysics']))
+                ['qtquick3d', 'qtquick3dphysics', 'qtactiveqt']))
 
             # openssl
             openssl = Recipe.get_recipe('openssl', self.ctx)
             configure = configure.bake('-ssl', '-openssl-runtime')
-            # configure = configure.bake('OPENSSL_INCDIR=' + join(openssl.get_build_dir(arch.arch), 'include'))
             configure = configure.bake('OPENSSL_INCLUDE_DIR=' + join(openssl.get_build_dir(arch.arch), 'include'))
             # configure = configure.bake('OPENSSL_LIBDIR=' + openssl.get_build_dir(arch.arch))
             configure = configure.bake('OPENSSL_LIBS=%s' % openssl.link_libs_flags().strip())
@@ -171,32 +155,20 @@ class Qt6Recipe(BootstrapNDKRecipe):
                 configure = configure.bake('-no-feature-%s' % exclude)
 
             configure = configure.bake('--')
-            configure = configure.bake('-DQT_NO_PACKAGE_VERSION_CHECK=TRUE')
-            configure = configure.bake('-DQT_HOST_PATH=/usr/lib/qt6')
 
-            for x in glob.glob('/usr/lib/x86_64-linux-gnu/cmake/*'):
-                y = x.split('/')[-1]
-                print(f'{x} {x!r} {y}')
-                if y.startswith('Qt6'):
-                    configure = configure.bake(f'-D{y}_DIR=/usr/lib/x86_64-linux-gnu/cmake/{y}')
+            from pythonforandroid.recipes.hostqt6 import HostQt6Recipe
+            x = HostQt6Recipe()
+            x.ctx = self.ctx
+            env['LD_LIBRARY_PATH'] = join(x.get_install_dir(), 'lib')
+            configure = configure.bake('-DQT_HOST_PATH=%s' % x.get_install_dir())
 
-            # configure = configure.bake('-DQt6HostInfo_DIR=/usr/lib/x86_64-linux-gnu/cmake/Qt6HostInfo')
-            # configure = configure.bake('-DQt6CoreTools_DIR=/usr/lib/x86_64-linux-gnu/cmake/Qt6CoreTools')
-            # configure = configure.bake('-DQt6WidgetsTools_DIR=/usr/lib/x86_64-linux-gnu/cmake/Qt6WidgetsTools')
-            # configure = configure.bake('-DQt6GuiTools_DIR=/usr/lib/x86_64-linux-gnu/cmake/Qt6GuiTools')
-            # configure = configure.bake('-DQt6BuildInternals_DIR=/usr/lib/x86_64-linux-gnu/cmake/Qt6BuildInternals')
-            configure = configure.bake('-DQt6AndroidMacros_DIR=%s' % 'qtbase/src/corelib/Qt6AndroidMacros.cmake')
-            configure = configure.bake('-DQT_ADDITIONAL_PACKAGES_PREFIX_PATH=/usr/lib/x86_64-linux-gnu')
-            configure = configure.bake('-DCMAKE_PREFIX_PATH=/usr/lib/x86_64-linux-gnu/cmake')
-            # configure = configure.bake('-DCMAKE_MODULE_PATH=/usr/lib/x86_64-linux-gnu/cmake')
-            configure = configure.bake('--debug-find-pkg=WrapOpenGL')
 
             info(str(configure))
 
-            shprint(configure, _tail=50, _critical=True)
+            shprint(configure, _tail=50, _env=env, _critical=True)
 
-            shprint(sh.make, '-j' + str(cpu_count()), _critical=True )
-            shprint(sh.make, '-j' + str(cpu_count()), 'install', _critical=True )
+            shprint(sh.make, _env=env, _critical=True )
+            shprint(sh.make, 'install', _env=env, _critical=True )
 
 
     def postbuild_arch(self, arch):
