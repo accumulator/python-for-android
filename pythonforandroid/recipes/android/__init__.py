@@ -12,7 +12,7 @@ class AndroidRecipe(IncludedFilesBehaviour, CythonRecipe):
 
     src_filename = 'src'
 
-    depends = [('sdl2', 'genericndkbuild', 'qt5'), 'pyjnius']
+    depends = [('sdl2', 'genericndkbuild', 'qt6'), 'pyjnius']
 
     config_env = {}
 
@@ -35,7 +35,7 @@ class AndroidRecipe(IncludedFilesBehaviour, CythonRecipe):
             ctx_bootstrap = ctx_bootstrap.decode('utf-8')
         bootstrap = bootstrap_name = ctx_bootstrap
         is_sdl2 = (bootstrap_name == "sdl2")
-        if bootstrap_name in ["sdl2", "webview", "qt5", "service_only", "service_library"]:
+        if bootstrap_name in ["sdl2", "webview", "qt6", "service_only", "service_library"]:
             java_ns = u'org.kivy.android'
             jni_ns = u'org/kivy/android'
         else:
@@ -84,9 +84,9 @@ class AndroidRecipe(IncludedFilesBehaviour, CythonRecipe):
                     '#define SDL_ANDROID_GetJNIEnv WebView_AndroidGetJNIEnv\n'
                 )
             else:
-                fh.write('JNIEnv *Qt5_AndroidGetJNIEnv(void);\n')
+                fh.write('JNIEnv *Qt6_AndroidGetJNIEnv(void);\n')
                 fh.write(
-                    '#define SDL_ANDROID_GetJNIEnv Qt5_AndroidGetJNIEnv\n'
+                    '#define SDL_ANDROID_GetJNIEnv Qt6_AndroidGetJNIEnv\n'
                 )
 
 

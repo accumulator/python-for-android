@@ -13,7 +13,7 @@ class PyjniusRecipe(CythonRecipe):
     site_packages_name = 'jnius'
 
     patches = [('genericndkbuild_jnienv_getter.patch', will_build('genericndkbuild')),
-               ('qt5_jnienv_getter.patch', will_build('qt6'))]
+               ('qt6_jnienv_getter.patch', will_build('qt6'))]
 
     def get_recipe_env(self, arch):
         env = super().get_recipe_env(arch)

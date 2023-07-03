@@ -4,8 +4,8 @@ from os.path import join
 import sh
 import glob
 
-class Qt5Bootstrap(Bootstrap):
-    name = 'qt5'
+class Qt6Bootstrap(Bootstrap):
+    name = 'qt6'
 
     recipe_depends = list(
         set(Bootstrap.recipe_depends).union({'qt6'})
@@ -60,4 +60,4 @@ class Qt5Bootstrap(Bootstrap):
         super().assemble_distribution()
 
 
-bootstrap = Qt5Bootstrap()
+bootstrap = Qt6Bootstrap()
