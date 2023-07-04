@@ -112,30 +112,6 @@ class Qt6Recipe(BootstrapNDKRecipe):
             f'libqml_QtMultimedia_quickmultimediaplugin_{arch_name}.so': 'qtbase/qml/QtMultimedia',
         }
 
-        # self.built_libraries = {}
-
-        # for f in glob.glob(join(install_dir, 'lib', '*')):
-        #     fa = f.split('/')
-        #     n = fa[-1]
-        #     p = fa[:-1]
-        #     print(f'{f} {f!r} {n}')
-        #     self.built_libraries[n] = p
-
-        # for f in glob.glob(join(install_dir, 'plugins', '**')):
-        #     fa = f.split('/')
-        #     n = fa[-1]
-        #     p = fa[:-1]
-        #     print(f'{f} {f!r} {n}')
-        #     self.built_libraries[n] = p
-        #
-        # for f in glob.glob(join(install_dir, 'qml', '**')):
-        #     fa = f.split('/')
-        #     n = fa[-1]
-        #     p = fa[:-1]
-        #     print(f'{f} {f!r} {n}')
-        #     self.built_libraries[n] = p
-
-
         return super().get_libraries(arch_name, in_context)
 
     def get_recipe_env(self, arch=None, with_flags_in_cc=True, with_python=True):
@@ -144,11 +120,14 @@ class Qt6Recipe(BootstrapNDKRecipe):
             with_python=with_python,
         )
         env['APP_ALLOW_MISSING_DEPS'] = 'true'
+        build_dir = self.get_build_dir(arch.arch)
+        env['QT_INSTALL_PATH'] = join(build_dir, 'install')
+        env['QT_EXT_PATH'] = join(self.ctx.libs_dir, 'bin')
         return env
 
     # remove me
-    def should_build(self, arch):
-        return True
+    # def should_build(self, arch):
+    #     return True
 
     def build_arch(self, arch):
         super().build_arch(arch)
@@ -224,7 +203,7 @@ class Qt6Recipe(BootstrapNDKRecipe):
 
     def postbuild_arch(self, arch):
         super().postbuild_arch(arch)
-        info('Copying Qt5 java class to classes build dir')
+        info('Copying Qt6 java class to classes build dir')
         # TODO: neatly filter *.java and *.aidl
         with current_directory(self.get_build_dir(arch.arch)):
             shprint(sh.cp, '-a', join('qtbase', 'src', 'android', 'java', 'src', 'org'), self.ctx.javaclass_dir)

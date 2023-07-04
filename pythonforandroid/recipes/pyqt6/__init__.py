@@ -17,13 +17,19 @@ class PyQt6Recipe(Recipe):
 
     depends = ['qt6', 'pyjnius', 'setuptools', 'pyqt6sip', 'hostpython3', 'pyqt_builder']
 
-    BINDINGS = ['Qt', 'QtCore', 'QtNetwork', 'QtGui', 'QtQml', 'QtQuick', 'QtAndroidExtras']
+    # BINDINGS = ['Qt', 'QtCore', 'QtNetwork', 'QtGui', 'QtQml', 'QtQuick', 'QtAndroidExtras']
+    BINDINGS = ['QtCore', 'QtNetwork', 'QtGui', 'QtQml', 'QtQuick']
 
     def get_recipe_env(self, arch):
         env = super().get_recipe_env(arch)
+
+        recipe = self.get_recipe('hostqt6', self.ctx)
+        env['LD_LIBRARY_PATH'] = join(recipe.get_install_dir(), 'lib')
+        # env['HOSTQT_PATH'] = join(recipe.get_install_dir(), 'bin')
+
         recipe = self.get_recipe('qt6', self.ctx)
         qt6_env = recipe.get_recipe_env(arch)
-        env['TARGET_QMAKEPATH'] = qt6_env['TARGET_QMAKEPATH']
+        env['QT_EXT_PATH'] = qt6_env['QT_EXT_PATH']
 
         return env
 
@@ -62,7 +68,7 @@ class PyQt6Recipe(Recipe):
         super().build_arch(arch)
 
         env = self.get_recipe_env(arch)
-        env['PATH'] = env['TARGET_QMAKEPATH'] + ":" + env['PATH']
+        env['PATH'] = env['QT_EXT_PATH'] + ":" + env['PATH']
         build_dir = self.get_build_dir(arch.arch)
         with current_directory(build_dir):
             info("compiling pyqt6")
