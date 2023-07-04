@@ -82,6 +82,8 @@ class HostQt6Recipe(Recipe):
             configure = configure.bake('-make','tools')
             configure = configure.bake('-submodules',','.join(
                 ['qtbase', 'qttools']))
+            configure = configure.bake('-skip', ','.join(
+                ['qtactiveqt']))
 
             info(str(configure))
 
