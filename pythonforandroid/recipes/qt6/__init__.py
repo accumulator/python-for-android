@@ -34,7 +34,7 @@ class Qt6Recipe(BootstrapNDKRecipe):
             f'libQt6Network_{arch_name}.so': 'qtbase/lib',
             f'libQt6Xml_{arch_name}.so': 'qtbase/lib',
             f'libQt6Concurrent_{arch_name}.so': 'qtbase/lib',
-            f'libQt6Sql_{arch_name}.so': 'qtbase/lib',
+            # f'libQt6Sql_{arch_name}.so': 'qtbase/lib',
             f'libQt6Qml_{arch_name}.so': 'qtbase/lib',
             f'libQt6QmlModels_{arch_name}.so': 'qtbase/lib',
             f'libQt6QmlWorkerScript_{arch_name}.so': 'qtbase/lib',
