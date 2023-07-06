@@ -45,7 +45,7 @@ class Qt6Bootstrap(Bootstrap):
             self.distribute_aidl(self.ctx.aidl_dir,
                                         dest_dir=join("src", "main", "aidl"))
 
-            python_bundle_dir = join('_python_bundle', '_python_bundle')
+            python_bundle_dir = join(f'_python_bundle__{arch.arch}', '_python_bundle')
             ensure_dir(python_bundle_dir)
             site_packages_dir = self.ctx.python_recipe.create_python_bundle(
                 join(self.dist_dir, python_bundle_dir), arch)
