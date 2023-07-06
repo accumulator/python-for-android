@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Replace org.libsdl.app with the identifier of your game below, e.g.
-     com.gamemaker.game
--->
+
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="{{ args.package }}"
       android:versionCode="{{ args.numeric_version }}"
@@ -18,7 +16,7 @@
             {% endif %}
     />
 
-    <!-- Android 2.3.3 -->
+    <!-- Android SDK version -->
     <uses-sdk android:minSdkVersion="{{ args.min_sdk_version }}" android:targetSdkVersion="{{ args.android_target_sdk_version }}" />
 
     <!-- OpenGL ES 2.0 -->
@@ -45,15 +43,6 @@
     {{ args.extra_manifest_xml }}
 
 
-    <!-- Create a Java class extending SDLActivity and place it in a
-         directory under src matching the package, e.g.
-         	src/com/gamemaker/game/MyGame.java
-
-         then replace "SDLActivity" with the name of your class (e.g. "MyGame")
-         in the XML below.
-
-         An example Java class can be found in README-android.txt
-    -->
     <application android:label="@string/app_name"
                  {% if debug %}android:debuggable="true"{% endif %}
                  android:icon="@mipmap/icon"
