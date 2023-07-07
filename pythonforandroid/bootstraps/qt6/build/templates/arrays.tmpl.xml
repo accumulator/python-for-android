@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="bundled_in_lib">
+    <string-array name="load_local_libs">
         <!--
         <item>{{ arch }};libplugins_bearer_qandroidbearer_{{ arch }}.so:libplugins_platforms_qtforandroid_{{ arch }}.so</item>
         -->
@@ -68,6 +68,7 @@
         <item>{{ arch }};Qt6Multimedia_{{ arch }}</item>
         <item>{{ arch }};Qt6MultimediaQuick_{{ arch }}</item>
         <item>{{ arch }};Qt6Svg_{{ arch }}</item>
+        <item>{{ arch }};Qt6OpenGL_{{ arch }}</item>
     </string-array>
     <string-array name="qt_sources">
         <item>https://download.qt.io/ministro/android/qt5/qt-5.7</item>

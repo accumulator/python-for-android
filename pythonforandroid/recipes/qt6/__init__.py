@@ -53,6 +53,7 @@ class Qt6Recipe(BootstrapNDKRecipe):
             f'libQt6QmlCore_{arch_name}.so': 'qtbase/lib',
             f'libQt6QuickControls2Impl_{arch_name}.so': 'qtbase/lib',
             f'libQt6ShaderTools_{arch_name}.so': 'qtbase/lib',
+            f'libQt6OpenGL_{arch_name}.so': 'qtbase/lib',
 
             # f'libplugins_bearer_qandroidbearer_{arch_name}.so': 'qtbase/plugins/bearer',
             f'libplugins_platforms_qtforandroid_{arch_name}.so': 'qtbase/plugins/platforms',

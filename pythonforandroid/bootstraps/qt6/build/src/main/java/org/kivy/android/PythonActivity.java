@@ -40,14 +40,15 @@ import android.view.WindowManager;
 
 import android.net.Uri;
 
-import android.support.v4.view.ViewCompat;
+// import android.support.v4.view.ViewCompat;
+import androidx.core.view.ViewCompat;
 
 import org.renpy.android.ResourceManager;
 
 import org.kivy.android.launcher.Project;
 
 
-import org.qtproject.qt5.android.bindings.QtActivity;
+import org.qtproject.qt.android.bindings.QtActivity;
 
 // Required by PythonService class
 public class PythonActivity extends QtActivity {
