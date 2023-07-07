@@ -481,7 +481,7 @@ main.py that loads it.''')
         for i in args.version.split('.'):
             version_code *= 100
             version_code += int(i)
-        args.numeric_version = "{}{}{}".format("10", min_sdk, version_code)
+        args.numeric_version = "{}{}{}".format("0", min_sdk, version_code)
 
     if args.intent_filters:
         with open(args.intent_filters) as fd:
