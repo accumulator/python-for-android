@@ -16,7 +16,7 @@ class PyQt6Recipe(Recipe):
 
     depends = ['qt6', 'pyjnius', 'setuptools', 'pyqt6sip', 'hostpython3', 'pyqt_builder']
 
-    BINDINGS = ['QtCore', 'QtNetwork', 'QtGui', 'QtQml', 'QtQuick', 'QtMultimedia']
+    BINDINGS = ['QtCore', 'QtNetwork', 'QtGui', 'QtQml', 'QtQuick', 'QtMultimedia', 'QtNfc']
 
     def get_recipe_env(self, arch):
         env = super().get_recipe_env(arch)

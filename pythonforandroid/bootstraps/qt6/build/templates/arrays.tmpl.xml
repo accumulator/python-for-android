@@ -57,5 +57,6 @@
 <!--         <item>{{ arch }};Qt6Xml_{{ arch }}</item> -->
         <item>{{ arch }};Qt6Multimedia_{{ arch }}</item>
         <item>{{ arch }};Qt6MultimediaQuick_{{ arch }}</item>
+        <item>{{ arch }};Qt6Nfc_{{ arch }}</item>
     </string-array>
 </resources>

@@ -48,6 +48,7 @@ class Qt6Recipe(BootstrapNDKRecipe):
             f'libQt6ShaderTools_{arch_name}.so': 'qtbase/lib',
             f'libQt6Svg_{arch_name}.so': 'qtbase/lib',
             # f'libQt6Xml_{arch_name}.so': 'qtbase/lib',
+            f'libQt6Nfc_{arch_name}.so': 'qtbase/lib',
 
             f'libplugins_platforms_qtforandroid_{arch_name}.so': 'qtbase/plugins/platforms',
             f'libplugins_imageformats_qjpeg_{arch_name}.so': 'qtbase/plugins/imageformats',
@@ -145,7 +146,7 @@ class Qt6Recipe(BootstrapNDKRecipe):
             configure = configure.bake('-nomake', 'examples')
             configure = configure.bake('-no-widgets')
             configure = configure.bake('-submodules', ','.join(
-                ['qtbase', 'qtdeclarative', 'qtimageformats', 'qtmultimedia']))
+                ['qtbase', 'qtdeclarative', 'qtimageformats', 'qtmultimedia', 'qtconnectivity']))
             configure = configure.bake('-skip', ','.join(
                 # ['qtquick3d', 'qtquick3dphysics', 'qtactiveqt']))
                 ['qtactiveqt']))
