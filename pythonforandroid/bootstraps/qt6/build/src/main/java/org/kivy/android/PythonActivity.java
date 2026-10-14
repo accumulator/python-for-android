@@ -17,26 +17,25 @@ import java.util.ArrayList;
 import android.view.ViewGroup;
 import android.view.KeyEvent;
 import android.view.Window;
+import android.view.ViewGroup.LayoutParams;
+import android.view.WindowManager;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.util.Log;
-import android.widget.Toast;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.PowerManager;
-import android.content.Context;
-import android.content.pm.PackageManager;
+import android.widget.Toast;
 import android.widget.ImageView;
+import android.widget.AbsoluteLayout;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-
-import android.widget.AbsoluteLayout;
-import android.view.ViewGroup.LayoutParams;
-import android.view.WindowManager;
 
 import android.net.Uri;
 
