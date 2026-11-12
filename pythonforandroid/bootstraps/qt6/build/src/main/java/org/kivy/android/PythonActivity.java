@@ -66,6 +66,8 @@ public class PythonActivity extends QtActivity {
     protected static ViewGroup mLayout;
 
     public static native void nativeSetenv(String name, String value);
+    public static native void setNativeDescriptor(int fd);
+    public static native void releaseNativeDescriptor();
 
     private static PythonActivityInit init = null;
 
