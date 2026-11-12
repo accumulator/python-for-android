@@ -98,13 +98,15 @@ public class PythonActivity extends QtActivity {
 
     private void loadNativeLib() {
         Log.v(TAG, "loading native lib");
+        String libPath = this.getFilesDir().getParentFile().getAbsolutePath() + "/lib";
+        Log.v(TAG, "native lib dir=" + libPath);
         try {
             System.loadLibrary("main");
         } catch (java.lang.UnsatisfiedLinkError e) {
             // alternate library load, some Android 5 devices fail
             // the above loadLibrary call.
             Log.v(TAG, "loading native lib (alt)");
-            String libPath = this.getFilesDir().getParentFile().getAbsolutePath() + "/lib";
+            // String libPath = this.getFilesDir().getParentFile().getAbsolutePath() + "/lib";
             System.load(libPath + "/libmain.so");
         }
     }
